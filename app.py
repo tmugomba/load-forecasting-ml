@@ -179,7 +179,7 @@ st.markdown("""
     <p class="hero-title"><span class="bolt">⚡</span> Electricity Load Forecasting</p>
     <p class="hero-subtitle">Hourly demand across 16 German federal states, 2019–2022 · 3 models trained and compared live</p>
     <p class="hero-goal">
-        <strong>Goal:</strong> predict a state's next hour of electricity demand using calendar patterns
+        <strong>Goal:</strong> Predict a state's next hour of electricity demand using calendar patterns
         and recent usage history, then compare how a simple baseline stacks up against more complex
         machine learning models on the same, genuinely held-out data.
     </p>
