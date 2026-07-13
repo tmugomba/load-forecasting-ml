@@ -47,19 +47,34 @@ h1, h2, h3 { font-family: 'Space Grotesk', sans-serif !important; color: #E8EDF4
 }
 .hero-title {
     font-family: 'Space Grotesk', sans-serif;
-    font-size: 2.1rem;
+    font-size: 2.9rem;
     font-weight: 700;
     color: #E8EDF4;
     margin: 0 0 6px 0;
 }
 .hero-subtitle { color: #8593AD; font-size: 1rem; margin: 0; }
 .hero-goal {
-    color: #C4CDE0; font-size: 0.95rem; margin: 14px 0 0 0; max-width: 640px; line-height: 1.5;
+    color: #C4CDE0; font-size: 1.02rem; margin: 14px 0 0 0; width: 100%; line-height: 1.6;
 }
 .hero-badges { margin-top: 16px; display: flex; gap: 10px; flex-wrap: wrap; }
 .badge {
     background: #1B2438; border: 1px solid #2E3B57; border-radius: 20px;
     padding: 5px 14px; font-size: 0.78rem; color: #C4CDE0; font-family: 'JetBrains Mono', monospace;
+}
+
+/* Shimmering lightning bolt — a subtle brightness/glow pulse, like a live current flicker */
+.bolt {
+    display: inline-block;
+    animation: bolt-shimmer 2.4s ease-in-out infinite;
+    text-shadow: 0 0 6px rgba(242, 183, 5, 0.6);
+}
+@keyframes bolt-shimmer {
+    0%, 100% { filter: brightness(1) drop-shadow(0 0 2px rgba(242, 183, 5, 0.4)); }
+    45% { filter: brightness(1) drop-shadow(0 0 2px rgba(242, 183, 5, 0.4)); }
+    50% { filter: brightness(1.9) drop-shadow(0 0 12px rgba(242, 183, 5, 0.9)); }
+    55% { filter: brightness(1) drop-shadow(0 0 2px rgba(242, 183, 5, 0.4)); }
+    70% { filter: brightness(1.5) drop-shadow(0 0 8px rgba(242, 183, 5, 0.7)); }
+    75% { filter: brightness(1) drop-shadow(0 0 2px rgba(242, 183, 5, 0.4)); }
 }
 
 /* State summary strip */
@@ -161,7 +176,7 @@ FEATURE_DESCRIPTIONS = {
 # ---------------------------------------------------------------
 st.markdown("""
 <div class="hero">
-    <p class="hero-title">⚡ Electricity Load Forecasting</p>
+    <p class="hero-title"><span class="bolt">⚡</span> Electricity Load Forecasting</p>
     <p class="hero-subtitle">Hourly demand across 16 German federal states, 2019–2022 · 3 models trained and compared live</p>
     <p class="hero-goal">
         <strong>Goal:</strong> predict a state's next hour of electricity demand using calendar patterns
@@ -267,10 +282,10 @@ st.markdown('<div class="transmission-line"></div>', unsafe_allow_html=True)
 # ---------------------------------------------------------------
 # Actual vs predicted chart — with area fill and richer hover
 # ---------------------------------------------------------------
-st.markdown("""
+st.markdown(f"""
 <div class="section-header">
     <div class="section-icon"></div>
-    <div class="section-title">Actual vs predicted</div>
+    <div class="section-title">Actual vs predicted <span class="model-tag">{STATE_NAMES[state_code]} ({state_code})</span></div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -306,10 +321,10 @@ st.plotly_chart(fig, use_container_width=True)
 # ---------------------------------------------------------------
 if trained_model is not None and hasattr(trained_model, "feature_importances_"):
     st.markdown('<div class="transmission-line"></div>', unsafe_allow_html=True)
-    st.markdown("""
+    st.markdown(f"""
     <div class="section-header">
         <div class="section-icon"></div>
-        <div class="section-title">Feature importance</div>
+        <div class="section-title">Feature importance <span class="model-tag">{STATE_NAMES[state_code]} ({state_code})</span></div>
     </div>
     """, unsafe_allow_html=True)
     st.caption("What the model actually relied on to make predictions — hover any bar for what it means")
