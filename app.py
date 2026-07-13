@@ -3,9 +3,13 @@ Load Forecasting Dashboard — Streamlit app.
 
 Two dropdowns (state, model) drive a live-computed forecast comparison,
 backed by the same functions validated in Notebooks 1-3. Linear Regression,
-Random Forest, and XGBoost train live on selection; SARIMAX reads from
-precomputed results (src/precompute_sarimax.py) since its walk-forward fit
-is too slow to run per-click.
+Random Forest, and XGBoost all train live on selection.
+
+A SARIMAX baseline was also investigated (see Notebook 3 and
+SARIMAX_METHODOLOGY.md) but is excluded from this app: it was confirmed the
+weakest performer, its walk-forward fit is too slow to run per-click, and a
+full 16-state precompute attempt hit an unresolved statsmodels internal
+failure. Excluded here for reliability and UX; fully documented elsewhere.
 """
 
 import streamlit as st
@@ -128,7 +132,7 @@ STATE_NAMES = {
     "SL": "Saarland", "SN": "Saxony", "ST": "Saxony-Anhalt", "SH": "Schleswig-Holstein",
     "TH": "Thuringia"
 }
-MODELS = ["Linear Regression", "Random Forest", "XGBoost", "SARIMAX"]
+MODELS = ["Linear Regression", "Random Forest", "XGBoost"]
 
 # Plain-English descriptions for every engineered feature — used in the
 # feature importance chart's hover text and the reference expander below it
@@ -158,10 +162,10 @@ FEATURE_DESCRIPTIONS = {
 st.markdown("""
 <div class="hero">
     <p class="hero-title">⚡ Electricity Load Forecasting</p>
-    <p class="hero-subtitle">Hourly demand across 16 German federal states, 2019–2022 · 4 models trained and compared live</p>
+    <p class="hero-subtitle">Hourly demand across 16 German federal states, 2019–2022 · 3 models trained and compared live</p>
     <p class="hero-goal">
         <strong>Goal:</strong> predict a state's next hour of electricity demand using calendar patterns
-        and recent usage history, then compare how a simple statistical baseline stacks up against
+        and recent usage history, then compare how a simple baseline stacks up against more complex
         machine learning models on the same, genuinely held-out data.
     </p>
     <div class="hero-badges">
@@ -189,12 +193,8 @@ with col2:
     model_name = st.selectbox(
         "Model", options=MODELS,
         help="Linear Regression: simple baseline. Random Forest & XGBoost: tree-based ML, capture "
-             "non-linear patterns. SARIMAX: classical time-series statistics — included as an honest "
-             "comparison; see the methodology note at the bottom of the page."
+             "non-linear, interaction-driven patterns without needing them hand-engineered."
     )
-
-if model_name == "SARIMAX":
-    st.info("SARIMAX uses precomputed results — walk-forward validation is too slow to run live per click.", icon="ℹ️")
 
 # ---------------------------------------------------------------
 # Pipeline
@@ -207,23 +207,11 @@ with st.spinner(f"Building features for {STATE_NAMES[state_code]}..."):
     features = get_features(state_code)
     train, val = time_split(features)
 
-if model_name == "SARIMAX":
-    try:
-        sarimax_metrics = pd.read_csv("data/sarimax_metrics.csv").set_index("state")
-        sarimax_preds_all = pd.read_csv("data/sarimax_predictions.csv", parse_dates=["datetime"])
-        state_preds = sarimax_preds_all[sarimax_preds_all["state"] == state_code].set_index("datetime")
-        predictions = state_preds["predicted"]
-        metrics = sarimax_metrics.loc[state_code].to_dict()
-        trained_model = None
-    except (FileNotFoundError, KeyError):
-        st.error("Precomputed SARIMAX results not found for this state. Run `python src/precompute_sarimax.py` first.")
-        st.stop()
-else:
-    with st.spinner(f"Training {model_name} on {STATE_NAMES[state_code]}..."):
-        result = train_and_evaluate(model_name, train, val)
-        predictions = result["predictions"]
-        metrics = result["metrics"]
-        trained_model = result["model"]
+with st.spinner(f"Training {model_name} on {STATE_NAMES[state_code]}..."):
+    result = train_and_evaluate(model_name, train, val)
+    predictions = result["predictions"]
+    metrics = result["metrics"]
+    trained_model = result["model"]
 
 # ---------------------------------------------------------------
 # State summary strip — quick context before diving into model results
@@ -352,5 +340,5 @@ st.markdown('<div class="transmission-line"></div>', unsafe_allow_html=True)
 st.caption(
     "Data: [Electrical Load and Generation for Germany (Kaggle)](https://www.kaggle.com/datasets/pythonafroz/electrical-load-and-generation-for-germany), "
     "hourly, 2019–2022. Models validated on the held-out last 6 months of 2022. "
-    "SARIMAX uses walk-forward validation — see project README for full methodology notes."
+    "A SARIMAX baseline was also investigated but excluded here — see SARIMAX_METHODOLOGY.md for the full write-up and results."
 )
