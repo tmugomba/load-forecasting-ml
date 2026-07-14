@@ -357,3 +357,12 @@ st.caption(
     "hourly, 2019–2022. Models validated on the held-out last 6 months of 2022. "
     "A SARIMAX baseline was also investigated but excluded here — see SARIMAX_METHODOLOGY.md for the full write-up and results."
 )
+
+st.markdown(
+    "<p style='color: #8593AD; font-size: 0.82rem; margin-top: 8px;'>"
+    "Built by Tendekai Mugomba — "
+    "<a href='https://www.linkedin.com/in/tendekai-mugomba' style='color: #F2B705;'>LinkedIn</a> · "
+    "<a href='https://github.com/tmugomba' style='color: #F2B705;'>GitHub</a>"
+    "</p>",
+    unsafe_allow_html=True
+)

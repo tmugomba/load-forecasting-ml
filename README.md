@@ -10,7 +10,7 @@ demonstrating applied data science for energy infrastructure.
 
 ## Why load forecasting matters
 
-Electricity can't be stored cheaply at grid scale — supply has to match demand in real time, every 
+Electricity can't be stored cheaply at grid scale — supply has to match demand in real time, every
 hour, every day. Grid operators who forecast demand well can plan **proactively**: buying power ahead
 of time at lower prices, scheduling maintenance during predictable low-demand windows, and integrating
 variable renewables (solar, wind) around known demand shapes.
@@ -176,3 +176,14 @@ Python, pandas, scikit-learn, XGBoost, statsmodels, Streamlit, Plotly, Jupyter
 ## Data license
 
 Dataset used under its [Kaggle listing](https://www.kaggle.com/datasets/pythonafroz/electrical-load-and-generation-for-germany) terms. Original source: German grid operator (TSO) data via SMARD/ENTSO-E.
+
+---
+
+## About the author
+
+**Tendekai Mugomba** — Electrical engineering student passionate about renewable energy, building
+data science skills at the intersection of energy systems and machine learning. Currently gaining
+hands-on experience in solar PV analytics, M&V, and energy modeling, and building this portfolio to
+apply that growing skill set to broader ML-driven energy problems.
+
+[LinkedIn](https://www.linkedin.com/in/tendekai-mugomba) · [GitHub](https://github.com/tmugomba)
