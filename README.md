@@ -4,7 +4,7 @@ A machine learning project forecasting hourly electricity demand across Germany'
 comparing classical and modern approaches on real grid data. Built as part of a personal portfolio
 demonstrating applied data science for energy infrastructure.
 
-**[Live Dashboard →](#)** *(link added after deployment)*
+**[Live Dashboard →](#)** *https://load-forecasting-ml.streamlit.app/*
 
 ---
 
